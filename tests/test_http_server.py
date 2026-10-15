@@ -63,7 +63,7 @@ class WagonApiTests(unittest.TestCase):
             "weight_tonnes": 40,
         }
         self.assertEqual(self.request_json("POST", "/api/wagons", payload)[0], 201)
-        self.assertEqual(self.request_json("POST", "/api/wagons", payload)[0], 400)
+        self.assertEqual(self.request_json("POST", "/api/wagons", payload)[0], 409)
         self.assertEqual(self.request_json("DELETE", "/api/wagons/FC-02")[0], 200)
 
     def test_navigation_moves_around_the_circular_list(self) -> None:

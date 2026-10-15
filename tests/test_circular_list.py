@@ -31,6 +31,13 @@ class DoublyCircularWagonListTests(unittest.TestCase):
         self.assertEqual(self.wagons.move("previous"), wagon("W-03"))
         self.assertEqual(self.wagons.move("next"), wagon("W-01"))
 
+    def test_appending_does_not_change_the_selected_wagon(self) -> None:
+        self.wagons.append(wagon("W-01"))
+        self.wagons.append(wagon("W-02"))
+        self.wagons.move("next")
+        self.wagons.append(wagon("W-03"))
+        self.assertEqual(self.wagons.current, wagon("W-02"))
+
     def test_removing_current_selects_next_and_keeps_links_circular(self) -> None:
         for wagon_id in ("W-01", "W-02", "W-03"):
             self.wagons.append(wagon(wagon_id))

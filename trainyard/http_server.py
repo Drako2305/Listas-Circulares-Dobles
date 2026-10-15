@@ -3,7 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-from trainyard.circular_list import DoublyCircularWagonList
+from trainyard.circular_list import DoublyCircularWagonList, DuplicateWagonError
 from trainyard.models import Wagon
 
 WEB_ROOT = Path(__file__).resolve().parent.parent / "web"
@@ -93,7 +93,10 @@ def create_request_handler(yard: DoublyCircularWagonList) -> type[BaseHTTPReques
                     weight_tonnes=payload["weight_tonnes"],
                 )
                 yard.append(wagon)
-            except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+            except DuplicateWagonError as error:
+                self._send_json(409, {"error": str(error)})
+                return
+            except (KeyError, TypeError, ValueError) as error:
                 self._send_json(400, {"error": str(error)})
                 return
             self._send_json(201, {"wagon": wagon.to_dict()})

@@ -4,6 +4,10 @@ from dataclasses import dataclass
 from trainyard.models import Wagon
 
 
+class DuplicateWagonError(ValueError):
+    """Raised when a wagon code is already present in the circular list."""
+
+
 @dataclass
 class _Node:
     wagon: Wagon
@@ -29,7 +33,7 @@ class DoublyCircularWagonList:
 
     def append(self, wagon: Wagon) -> None:
         if self.find(wagon.wagon_id) is not None:
-            raise ValueError(f"Wagon {wagon.wagon_id} already exists.")
+            raise DuplicateWagonError(f"Wagon {wagon.wagon_id} already exists.")
 
         node = _Node(wagon)
         if self._head is None:
